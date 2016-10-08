@@ -1,6 +1,6 @@
-$TTL    3600
+$TTL    10
 @       IN      SOA     ns1.cs4404.com. ns2.cs4404.com. (
-                  7     ; Serial
+                  9     ; Serial
                3600     ; Refresh
                3600     ; Retry
                3600     ; Expire

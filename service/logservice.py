@@ -11,3 +11,6 @@ class LogService(object):
 
     def end(self):
         self.f.close()
+
+
+log_service = LogService()

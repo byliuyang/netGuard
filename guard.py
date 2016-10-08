@@ -6,6 +6,7 @@ from threading import Thread
 import config.guardconfig as cfg
 from dns_request_handler import DNSRequestHandler
 from service.configservice import ConfigService
+from service.logservice import log_service
 
 
 class Guard(object):
@@ -33,7 +34,8 @@ class Guard(object):
         except KeyboardInterrupt:
             pass
         finally:
+            print()
             print("Revert configuration")
-            configService = ConfigService()
-            configService.revert()
+            ConfigService.revert()
+            log_service.end()
             s.shutdown()

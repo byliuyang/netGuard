@@ -32,3 +32,5 @@ class NATService(object):
                                           '-j',
                                           'REDIRECT', '--to-port', str(target_port)]
         Utility.exec(cmd)
+
+nat_service = NATService()
