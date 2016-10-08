@@ -10,7 +10,7 @@ from service.configservice import ConfigService
 
 class Guard(object):
     def __init__(self):
-
+        print("Auto configure server")
         configService = ConfigService()
         configService.configure()
 
@@ -33,4 +33,7 @@ class Guard(object):
         except KeyboardInterrupt:
             pass
         finally:
+            print("Revert configuration")
+            configService = ConfigService()
+            configService.revert()
             s.shutdown()

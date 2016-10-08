@@ -21,3 +21,9 @@ class ConfigService(object):
             dst = '%s/%s' % (cfg.dnsConfig['ZONE_LOCATION'], zonefile)
             shutil.copyfile(src, dst)
 
+    @staticmethod
+    def revert():
+        print('Revert DNS queries redirection')
+        natservice = NATService()
+        natservice.revert_pre_routing(cfg.guardConfig['ETHERNET'], cfg.guardConfig['DNS_PORT'],
+                                      cfg.guardConfig['GUARD_PORT'])

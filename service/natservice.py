@@ -25,3 +25,10 @@ class NATService(object):
                                           '-j',
                                           'REDIRECT', '--to-port', str(target_port)]
         Utility.exec(cmd)
+
+    @staticmethod
+    def revert_pre_routing(ethernet, source_port, target_port):
+        cmd = NATService.NAT_TABLE_CMD + ['-D', 'PREROUTING', '-i', ethernet, '-p', 'udp', '--dport', str(source_port),
+                                          '-j',
+                                          'REDIRECT', '--to-port', str(target_port)]
+        Utility.exec(cmd)
