@@ -1,7 +1,8 @@
+import random
 import socket
 import subprocess
 
-from dnslib import DNSRecord, RR, QTYPE, AAAA
+from dnslib import DNSRecord
 
 import config.guardconfig as guard_cfg
 
@@ -38,3 +39,9 @@ class Utility(object):
         a = req.reply()
         a.add_answer(rr)
         return a
+
+    @staticmethod
+    def rand_record(response):
+        length = len(response.rr)
+        i = random.randint(0, length - 1)
+        return response.rr[i]

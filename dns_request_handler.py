@@ -27,7 +27,7 @@ class DNSRequestHandler(BaseRequestHandler):
         # print(answer)
         logService.log_dns_access(self.client_address[0], "Resolving", domain)
 
-        answer = response.get_a()
+        answer = Utility.rand_record(response)
 
         address = answer.rdata.toZone()
         logService.log_dns_access(self.client_address[0], "Response", address)
