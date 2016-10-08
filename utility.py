@@ -1,8 +1,9 @@
+import socket
 import subprocess
 
-from dnslib import DNSRecord, RR, QTYPE, A
+from dnslib import DNSRecord, RR, QTYPE, AAAA
+
 import config.guardconfig as guard_cfg
-from dns.resolver import Resolver, NoAnswer
 
 
 class Utility(object):
@@ -21,20 +22,19 @@ class Utility(object):
                guard_cfg.guardConfig['GUARD_PORT']]
 
     @staticmethod
-    def get_record(domain):
-        resolver = Resolver()
-        resolver.nameservers = [guard_cfg.guardConfig['NAME_SERVER']]
-        try:
-            return resolver.query(domain)
-        except KeyError as err:
-            print(err)
-        except NoAnswer as err:
-            print(err)
+    def get_record(data):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM):
+            # Connect to server and send data
+            HOST, PORT = guard_cfg.guardConfig['NAME_SERVER'], guard_cfg.guardConfig['DNS_PORT']
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+            sock.sendto(data, (HOST, PORT))
+            received = sock.recv(1024)
+            record = DNSRecord.parse(received)
+            return record
 
     @staticmethod
-    def get_response(domain, address, ttl):
-        q = DNSRecord.question(domain)
-        a = q.reply()
-        a.add_answer(RR(domain, QTYPE.A, rdata=A(address), ttl=ttl))
-        print(a)
+    def build_response(req, rr):
+        a = req.reply()
+        a.add_answer(rr)
         return a

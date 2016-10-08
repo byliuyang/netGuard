@@ -1,34 +1,29 @@
-import time
-
 import sys
-
-from nat_manager import NATManager
-from utility import Utility
-from dns_request_handler import DNSRequestHandler
+import time
 from socketserver import ThreadingUDPServer
 from threading import Thread
+
 import config.guardconfig as cfg
+from dns_request_handler import DNSRequestHandler
+from service.configservice import ConfigService
 
 
 class Guard(object):
     def __init__(self):
-        self.natManager = NATManager()
 
-        # Check whether or not already have traffic mapping
-        if self.natManager.is_pre_routing_exist(cfg.guardConfig['ETHERNET'], cfg.guardConfig['DNS_PORT'],
-                                                cfg.guardConfig['GUARD_PORT']):
-            print('Redirecting DNS queries to Guard')
-            self.natManager.intercept(cfg.guardConfig['ETHERNET'], cfg.guardConfig['DNS_PORT'],
-                                      cfg.guardConfig['GUARD_PORT'])
+        configService = ConfigService()
+        configService.configure()
 
     @staticmethod
     def run():
+        # start the monitor
         print('Start monitoring DNS queries')
         s = ThreadingUDPServer(('', cfg.guardConfig['GUARD_PORT']), DNSRequestHandler)
         thread = Thread(target=s.serve_forever)
         thread.daemon = True
         thread.start()
 
+        # initialize LogManager
         try:
             while True:
                 time.sleep(1)

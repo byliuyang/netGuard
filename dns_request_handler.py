@@ -1,6 +1,8 @@
 from socketserver import BaseRequestHandler
+
 from dnslib import DNSRecord
 
+from service.logservice import LogService
 from utility import Utility
 
 
@@ -9,23 +11,31 @@ class DNSRequestHandler(BaseRequestHandler):
         # Get DNS request bytes
         data = self.request[0]
         # Parse bytes into request
-        record = DNSRecord.parse(data)
+        request = DNSRecord.parse(data)
+
+        logService = LogService()
 
         print()
-        print('Incoming query:')
+        print('Incoming query from %s' % self.client_address[0])
         # Get Record label list, ["b'cs4404'", "b'com'"]
-        label = record.questions[0].qname.label
+        label = request.questions[0].qname.label
         # Decode bytes into string and reassemble the domain name
         domain = '.'.join([s.decode() for s in label])
-        # query DNS server for answer
-        answer = Utility.get_record(domain)
+        logService.log_dns_access(self.client_address[0], "Incoming query", "Permitted")
+        # query DNS server for response
+        response = Utility.get_record(data)
+        # print(answer)
+        logService.log_dns_access(self.client_address[0], "Resolving", domain)
 
-        # Get the TTL
-        ttl = answer.rrset.ttl
+        answer = response.get_a()
 
-        address = answer.response.answer[0].items[0].to_text()
-        response = Utility.get_response(domain, address, ttl)
-        response.header.id = record.header.id
+        address = answer.rdata.toZone()
+        logService.log_dns_access(self.client_address[0], "Response", address)
+        response = Utility.build_response(request, answer)
+        print(response)
+        response.header.id = request.header.id
         pack = response.pack()
 
         self.request[1].sendto(pack, self.client_address)
+
+        logService.end()

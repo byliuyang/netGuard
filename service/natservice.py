@@ -1,8 +1,7 @@
-import config.guardconfig as guard_cfg
 from utility import Utility
 
 
-class NATManager(object):
+class NATService(object):
     """iptables commands"""
     # Check whether NAT map exists
     NAT_TABLE_CMD = ['iptables', '-t', 'nat']
@@ -14,13 +13,15 @@ class NATManager(object):
 
     @staticmethod
     def is_pre_routing_exist(ethernet, source_port, target_port):
-        cmd = NATManager.NAT_TABLE_CMD + ['-C', 'PREROUTING', '-i', ethernet, '-p', 'udp', '--dport', str(source_port), '-j',
+        cmd = NATService.NAT_TABLE_CMD + ['-C', 'PREROUTING', '-i', ethernet, '-p', 'udp', '--dport', str(source_port),
+                                          '-j',
                                           'REDIRECT', '--to-port', str(target_port)]
         out, err = Utility.exec(cmd)
         return err == ''
 
     @staticmethod
     def intercept(ethernet, source_port, target_port):
-        cmd = NATManager.NAT_TABLE_CMD + ['-A', 'PREROUTING', '-i', ethernet, '-p', 'udp', '--dport', str(source_port), '-j',
+        cmd = NATService.NAT_TABLE_CMD + ['-A', 'PREROUTING', '-i', ethernet, '-p', 'udp', '--dport', str(source_port),
+                                          '-j',
                                           'REDIRECT', '--to-port', str(target_port)]
         Utility.exec(cmd)
