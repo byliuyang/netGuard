@@ -36,6 +36,6 @@ class Guard(object):
         finally:
             print()
             print("Revert configuration")
-            ConfigService.revert()
+            ConfigService.revoke()
             log_service.end()
             s.shutdown()

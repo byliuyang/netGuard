@@ -1,11 +1,10 @@
 from socketserver import BaseRequestHandler
 
-from dnslib import DNSRecord
+from dnslib import DNSRecord, QTYPE
 
 from service.logservice import log_service
+from service.natservice import nat_service
 from utility import Utility
-
-import db.mapdb as mapcfg
 
 
 class DNSRequestHandler(BaseRequestHandler):
@@ -17,7 +16,7 @@ class DNSRequestHandler(BaseRequestHandler):
 
         print()
         print('Incoming query from %s' % self.client_address[0])
-        # Get Record label list, ["b'cs4404'", "b'com'"]
+        # Get Record label list
         label = request.questions[0].qname.label
         # Decode bytes into string and reassemble the domain name
         domain = '.'.join([s.decode() for s in label])
@@ -26,11 +25,17 @@ class DNSRequestHandler(BaseRequestHandler):
         response = Utility.get_record(data)
         log_service.log_dns_access(self.client_address[0], "Resolving", domain)
 
-        # get a random record
+        # Get a random record
         answer = Utility.rand_record(response)
 
         address = answer.rdata.toZone()
         log_service.log_dns_access(self.client_address[0], "Response", address)
+
+        # Add NAT map
+        if answer.rtype == QTYPE.A:
+            nat_service.ipv4_map(domain, address, self.client_address[0], answer.ttl)
+        elif answer.rtype == QTYPE.AAAA:
+            nat_service.ipv6_map(domain, address, self.client_address[0], answer.ttl)
 
         # Build response
         response = Utility.build_response(request, answer)

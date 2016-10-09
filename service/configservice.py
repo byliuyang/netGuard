@@ -25,7 +25,7 @@ class ConfigService(object):
         Utility.exec(['service', 'bind9', 'reload'])
 
     @staticmethod
-    def revert():
+    def revoke():
         print('Revert DNS queries redirection')
         nat_service.revert_pre_routing(cfg.guardConfig['ETHERNET'], cfg.guardConfig['DNS_PORT'],
                                        cfg.guardConfig['GUARD_PORT'])
