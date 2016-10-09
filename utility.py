@@ -17,12 +17,6 @@ class Utility(object):
         return out.decode('utf-8'), err.decode('utf-8')
 
     @staticmethod
-    def pre_routing(source, source_port, target, target_port):
-        nat = ['PREROUTING', '-i', guard_cfg.guardConfig['ETHERNET'], '-p', 'udp', '--dport',
-               guard_cfg.guardConfig['DNS_PORT'], '-j', 'REDIRECT', '--to-port',
-               guard_cfg.guardConfig['GUARD_PORT']]
-
-    @staticmethod
     def get_record(data):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM):
             # Connect to server and send data
