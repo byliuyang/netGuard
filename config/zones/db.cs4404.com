@@ -1,4 +1,4 @@
-$TTL    60
+$TTL    5
 @       IN      SOA     ns1.cs4404.com. ns2.cs4404.com. (
                   9     ; Serial
                3600     ; Refresh

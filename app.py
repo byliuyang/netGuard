@@ -1,5 +1,6 @@
 from guard import Guard
 
+
 def main():
     print('Checking Guard configuration')
     guard = Guard()
