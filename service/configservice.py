@@ -15,6 +15,12 @@ class ConfigService(object):
             nat_service.intercept(cfg.guardConfig['ETHERNET'], cfg.guardConfig['DNS_PORT'],
                                   cfg.guardConfig['GUARD_PORT'])
 
+        if not nat_service.is_pre_routing_exist(cfg.guardConfig['ETHERNET'], cfg.guardConfig['DNS_PORT'],
+                                                cfg.guardConfig['GUARD_PORT']):
+            print('Redirecting DNS queries to Guard')
+            nat_service.intercept(cfg.guardConfig['ETHERNET'], cfg.guardConfig['DNS_PORT'],
+                                  cfg.guardConfig['GUARD_PORT'])
+
         # Refresh zone files
         for zonefile in cfg.dnsConfig['ZONE_FILES']:
             src = 'config/zones/%s' % (zonefile)

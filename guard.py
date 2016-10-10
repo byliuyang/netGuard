@@ -1,3 +1,4 @@
+import socket
 import sys
 import time
 from socketserver import ThreadingUDPServer
@@ -9,6 +10,7 @@ from service.configservice import ConfigService
 from service.logservice import log_service
 from service.natservice import nat_service
 from utility import Utility
+from v6server import V6Server
 
 
 class Guard(object):
@@ -21,7 +23,7 @@ class Guard(object):
     def run():
         # start the monitor
         print('Start monitoring DNS queries')
-        s = ThreadingUDPServer(('', cfg.guardConfig['GUARD_PORT']), DNSRequestHandler)
+        s = V6Server(('::', cfg.guardConfig['GUARD_PORT']), DNSRequestHandler)
         thread = Thread(target=s.serve_forever)
         thread.daemon = True
         thread.start()

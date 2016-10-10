@@ -1,10 +1,14 @@
-# Run
+# Your Robust Network Guard
+Protecting your valuable assets from intrusions
 
+Run
+===
 Use the following command to run the Guard Server:
-    ```sudo python3 app.py```
-    *Example output*
+
+```sudo python3 app.py```
+
+    *Example output*    
     ```
-    
     Checking Guard configuration
     Auto configure server
     Redirecting DNS queries to Guard
@@ -19,15 +23,15 @@ Use the following command to run the Guard Server:
     vm4.cs4404.com.         10      IN      AAAA    2604:a880:400:d0::ac9:e008
     ```
 
-# Testing
-
+Testing
+===
 Use the following commands to perform DNS query:
 
 1. Query A record
 
-    ```dig vm4.cs4404.com @192.241.147.112```
+    ```dig vm4.cs4404.com @2604:a880:400:d0::ac9:e001```
     or
-    ```dig vm4.cs4404.com A @192.241.147.112```
+    ```dig vm4.cs4404.com A @2604:a880:400:d0::ac9:e001```
 
     *Example output*
     ```
@@ -49,7 +53,7 @@ Use the following commands to perform DNS query:
     ;; MSG SIZE  rcvd: 48
     ```
 2. Query AAAA record
-    ```dig vm4.cs4404.com AAAA @192.241.147.112```
+    ```dig vm4.cs4404.com AAAA @2604:a880:400:d0::ac9:e001```
     *Example output*
     ```
     ; <<>> DiG 9.8.3-P1 <<>> vm4.cs4404.com AAAA @192.241.147.112
@@ -70,7 +74,7 @@ Use the following commands to perform DNS query:
     ;; MSG SIZE  rcvd: 60
     ```
 2. Query A or AAAA record
-```dig vm4.cs4404.com ANY @192.241.147.112```
+```dig vm4.cs4404.com ANY @2604:a880:400:d0::ac9:e001```
    *Example output*
    ```
    ; <<>> DiG 9.8.3-P1 <<>> vm4.cs4404.com ANY @192.241.147.112
@@ -93,6 +97,7 @@ Use the following commands to perform DNS query:
 
 Use the following command to send out http request:
 ```wget -O - http://[2604:a880:400:d0::ac9:e001]:80```
+```ssh cs4404@2604:a880:400:d0::ac9:e00e -p 2222```
 
 # Currently added domains:
  - vm4.cs4404.com. # 16 IPs

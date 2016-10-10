@@ -39,3 +39,8 @@ class Utility(object):
         length = len(response.rr)
         i = random.randint(0, length - 1)
         return response.rr[i]
+
+    @staticmethod
+    def get_ipv6(ipv4):
+        numbers = list(map(int, ipv4.split('.')))
+        return '2604:a880:400:d0::ac9:e001:{:02x}{:02x}:{:02x}{:02x}'.format(*numbers)
